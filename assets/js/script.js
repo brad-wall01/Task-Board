@@ -66,7 +66,40 @@ function readTasksFromStorage() {
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
+    const tasks = readTasksFromStorage();
 
+    const todoList = $("#todo-cards");
+    todoList.empty();
+  
+    const inProgressList = $("#in-progress-cards");
+    inProgressList.empty();
+  
+    const doneList = $("#done-cards");
+    doneList.empty();
+
+    for (let task of tasks) {
+        const tCard = createTaskCard(task);
+        if(task.status==="to-do"){
+          todoList.append(tCard)
+        }else if(task.status==="in-progress"){
+          inProgressList.append(tCard)
+        } else {
+          doneList.append(tCard)
+        }
+      }
+
+      $(".draggable").draggable({
+        opacity: 0.7,
+        zIndex: 100,
+        elper: function (e) {
+            const original = $(e.target).hasClass("ui-draggable")
+        ? $(e.target)
+        : $(e.target).closest(".ui-draggable");
+        return original.clone().css({
+            width: original.outerWidth(),
+          });
+        },
+      });
 }
 
 // Todo: create a function to handle adding a new task
