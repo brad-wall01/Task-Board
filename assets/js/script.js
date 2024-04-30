@@ -1,12 +1,15 @@
 // Retrieve tasks and nextId from localStorage
-let taskList = JSON.parse(localStorage.getItem("tasks"));
-let nextId = JSON.parse(localStorage.getItem("nextId"));
+let titleEl = $("#taskT");
+let dueEl = $("#taskDD");
+let descEl = $("#taskC");
+let button = $("#btn");
+let toDo = $('#to-do');
+let deleteBtn = $('.swim-lanes')
 
-// Todo: create a function to generate a unique task id
-function generateTaskId() {
 
-}
-
+function saveTasksToStorage(TaskObects){
+    localStorage.setItem("tasks",JSON.stringify(TaskObects));
+  }
 // Todo: create a function to create a task card
 function createTaskCard(task) {
     const taskCard = $('<section>');
@@ -52,6 +55,15 @@ function createTaskCard(task) {
     return taskCard;
 }
 
+function readTasksFromStorage() {
+    let tasks = [];
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+    if(savedTasks){
+    tasks=savedTasks;
+    }
+    return tasks;
+}
+
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
 
@@ -59,7 +71,30 @@ function renderTaskList() {
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
+    event.preventDefault();
 
+    const title = titleEl.val()
+    const dueDate = dueEl.val()
+    const content = descEl.val()
+
+    const newCard = {
+        id: crypto.randomUUID(),
+        title: title,
+        dueDate: dueDate,
+        content: content,
+        status: "to-do"
+    }
+    console.log(newCard)
+
+    const tasks = readTasksFromStorage();
+    tasks.push(newCard)
+
+    saveTasksToStorage(tasks);
+    renderTaskList()
+
+    titleEl.val('');
+    dueEl.val('');
+    descEl.val('');
 }
 
 // Todo: create a function to handle deleting a task
